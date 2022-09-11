@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/book-store-graphql-api.ts",
+  "app": "npx ts-node --prefer-ts-exts src/bin/book-store-graphql-api.ts",
   "watch": {
     "include": [
       "**"
