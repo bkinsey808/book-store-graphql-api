@@ -24,6 +24,8 @@ export const handler: AppSyncResolverHandler<
       },
       ReturnValues: 'ALL_NEW',
       Update: {
+        // can't change the key
+        // ...(book.id !== undefined ? { id: book.id } : {}),
         ...(book.title !== undefined ? { title: book.title } : {}),
         ...(book.rating !== undefined ? { rating: book.rating } : {}),
         ...(book.completed !== undefined ? { completed: book.completed } : {}),
