@@ -1,11 +1,30 @@
 type Book {
-    id: ID!
-    title: String!
-    completed: Boolean
-    rating: Int
-    reviews: [String]
+  id: ID!
+  title: String!
+  completed: Boolean
+  rating: Int
+  reviews: [String]
 }
 
 type Query {
-    listBooks: [Book]
+  listBooks: [Book]
+  getBookById(bookId: ID!): Book
+}
+
+type Mutation {
+  createBook(book: BookInput!): Book
+  updateBook(book: UpdateBookInput!): Book
+}
+
+input BookInput {
+  id: ID!
+  title: String!
+}
+
+input UpdateBookInput {
+  id: ID!
+  title: String
+  completed: Boolean
+  rating: Int
+  reviews: [String]
 }
