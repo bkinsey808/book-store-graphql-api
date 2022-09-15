@@ -1,5 +1,6 @@
 import { AppSyncResolverHandler } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
+
 import { Book, QueryGetBookByIdArgs } from '../../types/books';
 
 const documentClient = new DynamoDB.DocumentClient();

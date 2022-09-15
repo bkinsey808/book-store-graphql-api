@@ -1,7 +1,8 @@
 import { AppSyncResolverHandler } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
-import { Book, MutationUpdateBookArgs } from '../../types/books';
 import dynoexpr from '@tuplo/dynoexpr';
+
+import { Book, MutationUpdateBookArgs } from '../../types/books';
 
 const documentClient = new DynamoDB.DocumentClient();
 
@@ -28,7 +29,7 @@ export const handler: AppSyncResolverHandler<
         ...(book.completed !== undefined ? { completed: book.completed } : {}),
         ...(book.reviews !== undefined ? { reviews: book.reviews } : {}),
       },
-      // don't understand why this cast in necessary here. Only needed when reviews is included in set of mutable fields
+      // don't understand why this cast is necessary here. Only needed when reviews is included in set of mutable fields
     } as any);
 
     const result = await documentClient.update(params).promise();
