@@ -9,6 +9,9 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as nodejsLambda from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as path from 'path';
 
+// for a reason I don't understand sometimes I have to do a first pass with this as false, then a second pass with it as true
+const DEPLOY_RESOLVERS = true;
+
 export class BookStoreGraphqlApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -87,16 +90,18 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
       },
     );
 
-    const listBooksResolver = new appsync.CfnResolver(
-      this,
-      'ListBooksResolver',
-      {
-        apiId: api.attrApiId,
-        typeName: 'Query',
-        fieldName: 'listBooks',
-        dataSourceName: listBooksDataSource.name,
-      },
-    );
+    if (DEPLOY_RESOLVERS) {
+      const listBooksResolver = new appsync.CfnResolver(
+        this,
+        'ListBooksResolver',
+        {
+          apiId: api.attrApiId,
+          typeName: 'Query',
+          fieldName: 'listBooks',
+          dataSourceName: listBooksDataSource.name,
+        },
+      );
+    }
 
     // get book by id endpoint
 
@@ -119,16 +124,18 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
       },
     );
 
-    const getBookByIdResolver = new appsync.CfnResolver(
-      this,
-      'GetBookByIdResolver',
-      {
-        apiId: api.attrApiId,
-        typeName: 'Query',
-        fieldName: 'getBookById',
-        dataSourceName: getBookByIdDataSource.name,
-      },
-    );
+    if (DEPLOY_RESOLVERS) {
+      const getBookByIdResolver = new appsync.CfnResolver(
+        this,
+        'GetBookByIdResolver',
+        {
+          apiId: api.attrApiId,
+          typeName: 'Query',
+          fieldName: 'getBookById',
+          dataSourceName: getBookByIdDataSource.name,
+        },
+      );
+    }
 
     // create book endpoint
 
@@ -145,22 +152,25 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
       {
         ...commonDataSourceProps,
         name: 'CreateBookDataSource',
+
         lambdaConfig: {
           lambdaFunctionArn: createBookLambda.functionArn,
         },
       },
     );
 
-    const createBookResolver = new appsync.CfnResolver(
-      this,
-      'CreateBookResolver',
-      {
-        apiId: api.attrApiId,
-        typeName: 'Mutation',
-        fieldName: 'createBook',
-        dataSourceName: createBookDataSource.name,
-      },
-    );
+    if (DEPLOY_RESOLVERS) {
+      const createBookResolver = new appsync.CfnResolver(
+        this,
+        'CreateBookResolver',
+        {
+          apiId: api.attrApiId,
+          typeName: 'Mutation',
+          fieldName: 'createBook',
+          dataSourceName: createBookDataSource.name,
+        },
+      );
+    }
 
     // update book endpoint
 
@@ -188,15 +198,17 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
       },
     );
 
-    const updateBookResolver = new appsync.CfnResolver(
-      this,
-      'UpdateBookResolver',
-      {
-        apiId: api.attrApiId,
-        typeName: 'Mutation',
-        fieldName: 'updateBook',
-        dataSourceName: updateBookDataSource.name,
-      },
-    );
+    if (DEPLOY_RESOLVERS) {
+      const updateBookResolver = new appsync.CfnResolver(
+        this,
+        'UpdateBookResolver',
+        {
+          apiId: api.attrApiId,
+          typeName: 'Mutation',
+          fieldName: 'updateBook',
+          dataSourceName: updateBookDataSource.name,
+        },
+      );
+    }
   }
 }
