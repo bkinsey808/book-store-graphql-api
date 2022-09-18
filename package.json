@@ -20,7 +20,7 @@
     "@types/jest": "^27.5.2",
     "@types/node": "10.17.27",
     "@types/prettier": "2.6.0",
-    "aws-cdk": "2.41.0",
+    "aws-cdk": "2.42.0",
     "esbuild": "^0.15.7",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.4",
@@ -30,7 +30,7 @@
   "dependencies": {
     "@aws-cdk/aws-appsync": "^1.172.0",
     "@tuplo/dynoexpr": "^2.15.0",
-    "aws-cdk-lib": "2.41.0",
+    "aws-cdk-lib": "2.42.0",
     "aws-sdk": "^2.1214.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
