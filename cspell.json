@@ -4,7 +4,9 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "codegen",
         "dynoexpr",
+        "esbuild",
         "tuplo"
     ],
     "ignoreWords": [],

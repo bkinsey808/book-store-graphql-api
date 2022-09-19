@@ -3,6 +3,7 @@
 !.prettierrc.js
 *.d.ts
 node_modules
+dist
 
 # CDK asset staging directory
 .cdk.staging
