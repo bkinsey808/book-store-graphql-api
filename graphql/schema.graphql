@@ -6,6 +6,10 @@ type Book {
   reviews: [String]
 }
 
+type Success {
+  success: Boolean!
+}
+
 type Query {
   listBooks: [Book]
   getBookById(bookId: ID!): Book
@@ -14,6 +18,7 @@ type Query {
 type Mutation {
   createBook(book: BookInput!): Book
   updateBook(book: UpdateBookInput!): Book
+  deleteBook(bookId: ID!): Success
 }
 
 input BookInput {

@@ -10,7 +10,8 @@
     "test": "jest",
     "cdk": "cdk",
     "diff": "cdk diff",
-    "deploy": "cdk deploy --all",
+    "//deploy": "echo 'This is an absurd hack that depresses me'",
+    "deploy": "cross-env DEPLOY_RESOLVERS=false cdk deploy && cross-env DEPLOY_RESOLVERS=true cdk deploy",
     "codegen": "graphql-codegen",
     "//cdk-app": "echo 'This is the script cdk calls, configured in cdk.json'",
     "cdk-app": "dotenv -c -- ts-node --prefer-ts-exts src/bin/book-store-graphql-api.ts"
@@ -22,7 +23,8 @@
     "@types/jest": "^27.5.2",
     "@types/node": "10.17.27",
     "@types/prettier": "2.6.0",
-    "aws-cdk": "2.42.0",
+    "aws-cdk": "2.41.0",
+    "cross-env": "^7.0.3",
     "dotenv-cli": "^6.0.0",
     "esbuild": "^0.15.7",
     "jest": "^27.5.1",
@@ -33,7 +35,7 @@
   "dependencies": {
     "@aws-cdk/aws-appsync": "^1.172.0",
     "@tuplo/dynoexpr": "^2.15.0",
-    "aws-cdk-lib": "2.42.0",
+    "aws-cdk-lib": "2.41.0",
     "aws-sdk": "^2.1214.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"

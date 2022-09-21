@@ -4,7 +4,8 @@ import * as cdk from 'aws-cdk-lib';
 import { BookStoreGraphqlApiStack } from '../lib/book-store-graphql-api-stack';
 import { Stage } from '../lib/helpers';
 
-console.log('STAGE: ', process.env.STAGE);
+console.log('STAGE:', process.env.STAGE);
+console.log('DEPLOY_RESOLVERS:', process.env.DEPLOY_RESOLVERS);
 
 const app = new cdk.App();
 
@@ -15,50 +16,34 @@ const stackProps: cdk.StackProps = {
   },
 };
 
-const createStacks = async () => {
-  try {
-    const stage = process.env.STAGE as Stage;
+try {
+  const stage = process.env.STAGE as Stage;
 
-    if (!stage) {
-      throw new Error('STAGE environment variable must be set');
-    }
-
-    if (!Object.values(Stage).includes(stage)) {
-      throw new Error(
-        `STAGE environment variable must be one of ${Object.values(Stage)}`,
-      );
-    }
-
-    const context = {
-      stage,
-    };
-
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
-    // for some reason I don't understand, I have to deploy without resolvers first :(
-    new BookStoreGraphqlApiStack(
-      app,
-      `BookStoreGraphqlApiStack-no-resolvers-${stage}`,
-      stackProps,
-      {
-        ...context,
-        deployResolvers: false,
-      },
-    );
-
-    new BookStoreGraphqlApiStack(
-      app,
-      `BookStoreGraphqlApiStack-${stage}`,
-      stackProps,
-      {
-        ...context,
-        deployResolvers: true,
-      },
-    );
-  } catch (e) {
-    console.log('error: ', e);
+  if (!stage) {
+    throw new Error('STAGE environment variable must be set');
   }
-};
-// app.synth();
 
-createStacks();
+  if (!Object.values(Stage).includes(stage)) {
+    throw new Error(
+      `STAGE environment variable must be one of ${Object.values(Stage)}`,
+    );
+  }
+
+  const context = {
+    stage,
+  };
+
+  new BookStoreGraphqlApiStack(
+    app,
+    `BookStoreGraphqlApiStack-${stage}`,
+    stackProps,
+    {
+      ...context,
+      deployResolvers: process.env.DEPLOY_RESOLVERS === 'true',
+    },
+  );
+} catch (e) {
+  console.log('error: ', e);
+}
+
+app.synth();
