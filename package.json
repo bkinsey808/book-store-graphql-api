@@ -11,7 +11,7 @@
     "cdk": "cdk",
     "diff": "cdk diff",
     "//deploy": "echo 'This is an absurd hack that depresses me'",
-    "deploy": "cross-env DEPLOY_RESOLVERS=false cdk deploy && cross-env DEPLOY_RESOLVERS=true cdk deploy",
+    "deploy": "cross-env DEPLOY_RESOLVERS=false cdk deploy && cross-env DEPLOY_RESOLVERS=true cdk deploy --outputs-file cdk.outputs.json",
     "codegen": "graphql-codegen",
     "//cdk-app": "echo 'This is the script cdk calls, configured in cdk.json'",
     "cdk-app": "dotenv -c -- ts-node --prefer-ts-exts src/bin/book-store-graphql-api.ts"

@@ -24,8 +24,14 @@ export const commonResources = ({
   const stage = context.stage;
 
   const api = new appsync.CfnGraphQLApi(scope, `BookApi_${stage}`, {
-    name: `book-api${stage}`,
+    name: `book-api-${stage}`,
     authenticationType: 'API_KEY',
+  });
+
+  // output the GraphQL URL
+  new cdk.CfnOutput(scope, 'GraphQlUrl', {
+    value: api.attrGraphQlUrl ?? 'UNDEFINED',
+    exportName: 'graphql-url',
   });
 
   const schema = new appsync.CfnGraphQLSchema(scope, `BookSchema_${stage}`, {
@@ -35,10 +41,16 @@ export const commonResources = ({
 
   const apiKey = new appsync.CfnApiKey(scope, `BookApiKey_${stage}`, {
     apiId: api.attrApiId,
-    description: `API key for book-api (${stage})`,
+    description: `API key for book-api-${stage}`,
     // 365 days seems to be the limit imposed by AWS for API keys.
     // One possible workaround is to have the lambda function handle authentication
     expires: cdk.Expiration.after(cdk.Duration.days(365)).toEpoch(),
+  });
+
+  // output the API key
+  new cdk.CfnOutput(scope, 'ApiKey', {
+    value: apiKey.attrApiKey ?? 'UNDEFINED',
+    exportName: 'api-key',
   });
 
   const lambdaRole = new iam.Role(scope, `LambdaRole_${stage}`, {
