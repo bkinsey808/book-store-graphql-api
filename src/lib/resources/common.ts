@@ -12,6 +12,7 @@ import {
   CommonLambdaProps,
 } from '../helpers';
 
+/** common stuff not related to particular endpoints */
 export const commonResources = ({
   scope,
   context,
@@ -19,8 +20,6 @@ export const commonResources = ({
   scope: Construct;
   context: BookStoreGraphqlApiStackContext;
 }) => {
-  // common stuff not related to particular endpoints
-
   const stage = context.stage;
 
   const api = new appsync.CfnGraphQLApi(scope, `BookApi_${stage}`, {
@@ -29,9 +28,9 @@ export const commonResources = ({
   });
 
   // output the GraphQL URL
-  new cdk.CfnOutput(scope, 'GraphQlUrl', {
+  new cdk.CfnOutput(scope, `GraphQlUrl`, {
     value: api.attrGraphQlUrl ?? 'UNDEFINED',
-    exportName: 'graphql-url',
+    exportName: `graphql-url-${stage}`,
   });
 
   const schema = new appsync.CfnGraphQLSchema(scope, `BookSchema_${stage}`, {
@@ -48,10 +47,39 @@ export const commonResources = ({
   });
 
   // output the API key
-  new cdk.CfnOutput(scope, 'ApiKey', {
+  new cdk.CfnOutput(scope, `ApiKey`, {
     value: apiKey.attrApiKey ?? 'UNDEFINED',
-    exportName: 'api-key',
+    exportName: `api-key-${stage}`,
   });
+
+  const stageAdminRole = new iam.Role(scope, `StageAdminRole_${stage}`, {
+    assumedBy: new iam.ServicePrincipal('appsync.amazonaws.com'),
+  });
+
+  const stageAdminGroup = new iam.Group(scope, `StageAdminGroup_${stage}`, {});
+
+  const stageAdminPolicy = new iam.Policy(scope, `StageAdminPolicy_${stage}`, {
+    statements: [
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['appsync:*'],
+        resources: ['*'],
+        conditions: {
+          StringEquals: {
+            'aws:ResourceTag/stage': stage,
+          },
+        },
+      }),
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['appsync:ListGraphqlApis'],
+        resources: ['*'],
+      }),
+    ],
+  });
+
+  stageAdminPolicy.attachToRole(stageAdminRole);
+  stageAdminPolicy.attachToGroup(stageAdminGroup);
 
   const lambdaRole = new iam.Role(scope, `LambdaRole_${stage}`, {
     assumedBy: new iam.ServicePrincipal('appsync.amazonaws.com'),

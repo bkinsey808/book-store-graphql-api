@@ -20,6 +20,9 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
 
     const deployResolvers = context.deployResolvers;
 
+    // applies a new tag to the given construct and all of its children.
+    cdk.Tags.of(this).add('stage', context.stage);
+
     const { stage, commonLambdaProps, commonDataSourceProps, booksTable, api } =
       commonResources({
         scope: this,
