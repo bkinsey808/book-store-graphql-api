@@ -8,6 +8,7 @@ import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 /** get book by id endpoint */
 export const getBookByIdResources = ({
   scope,
+  project,
   stage,
   commonLambdaProps,
   commonDataSourceProps,
@@ -16,6 +17,7 @@ export const getBookByIdResources = ({
   deployResolvers,
 }: {
   scope: Construct;
+  project: string;
   stage: Stage;
   commonLambdaProps: CommonLambdaProps;
   commonDataSourceProps: CommonDataSourceProps;
@@ -25,7 +27,7 @@ export const getBookByIdResources = ({
 }) => {
   const getBookByIdLambda = new lambda.Function(
     scope,
-    `GetBookByIdHandler_${stage}`,
+    `GetBookByIdHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
       handler: 'getBookById.handler',
@@ -36,10 +38,10 @@ export const getBookByIdResources = ({
 
   const getBookByIdDataSource = new appsync.CfnDataSource(
     scope,
-    `GetBookByIdDataSource_${stage}`,
+    `GetBookByIdDataSource_${project}_${stage}`,
     {
       ...commonDataSourceProps,
-      name: `GetBookByIdDataSource_${stage}`,
+      name: `GetBookByIdDataSource_${project}_${stage}`,
       lambdaConfig: {
         lambdaFunctionArn: getBookByIdLambda.functionArn,
       },
@@ -49,7 +51,7 @@ export const getBookByIdResources = ({
   if (deployResolvers) {
     const getBookByIdResolver = new appsync.CfnResolver(
       scope,
-      `GetBookByIdResolver_${stage}`,
+      `GetBookByIdResolver_${project}_${stage}`,
       {
         apiId: api.attrApiId,
         typeName: 'Query',

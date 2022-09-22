@@ -4,6 +4,7 @@ import * as cdk from 'aws-cdk-lib';
 import { BookStoreGraphqlApiStack } from '../lib/book-store-graphql-api-stack';
 import { Stage } from '../lib/helpers';
 
+console.log('PROJECT:', process.env.PROJECT);
 console.log('STAGE:', process.env.STAGE);
 console.log('DEPLOY_RESOLVERS:', process.env.DEPLOY_RESOLVERS);
 
@@ -29,19 +30,21 @@ try {
     );
   }
 
+  const project = process.env.PROJECT as string;
+
+  if (!project) {
+    throw new Error('PROJECT environment variable must be set');
+  }
+
   const context = {
     stage,
+    project,
   };
 
-  new BookStoreGraphqlApiStack(
-    app,
-    `BookStoreGraphqlApiStack-${stage}`,
-    stackProps,
-    {
-      ...context,
-      deployResolvers: process.env.DEPLOY_RESOLVERS === 'true',
-    },
-  );
+  new BookStoreGraphqlApiStack(app, `${project}-${stage}`, stackProps, {
+    ...context,
+    deployResolvers: process.env.DEPLOY_RESOLVERS === 'true',
+  });
 } catch (e) {
   console.log('error: ', e);
 }

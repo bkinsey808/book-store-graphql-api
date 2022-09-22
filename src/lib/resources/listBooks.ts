@@ -8,6 +8,7 @@ import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 /** list books endpoint */
 export const listBooksResources = ({
   scope,
+  project,
   stage,
   commonLambdaProps,
   commonDataSourceProps,
@@ -16,6 +17,7 @@ export const listBooksResources = ({
   deployResolvers,
 }: {
   scope: Construct;
+  project: string;
   stage: Stage;
   commonLambdaProps: CommonLambdaProps;
   commonDataSourceProps: CommonDataSourceProps;
@@ -25,7 +27,7 @@ export const listBooksResources = ({
 }) => {
   const listBooksLambda = new lambda.Function(
     scope,
-    `ListBooksHandler_${stage}`,
+    `ListBooksHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
       handler: 'listBooks.handler',
@@ -36,10 +38,10 @@ export const listBooksResources = ({
 
   const listBooksDataSource = new appsync.CfnDataSource(
     scope,
-    `ListBooksDataSource_${stage}`,
+    `ListBooksDataSource_${project}_${stage}`,
     {
       ...commonDataSourceProps,
-      name: `ListBooksDataSource_${stage}`,
+      name: `ListBooksDataSource_${project}_${stage}`,
       lambdaConfig: {
         lambdaFunctionArn: listBooksLambda.functionArn,
       },
@@ -49,7 +51,7 @@ export const listBooksResources = ({
   if (deployResolvers) {
     const listBooksResolver = new appsync.CfnResolver(
       scope,
-      `ListBooksResolver_${stage}`,
+      `ListBooksResolver_${project}_${stage}`,
       {
         apiId: api.attrApiId,
         typeName: 'Query',

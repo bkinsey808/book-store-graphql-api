@@ -8,6 +8,7 @@ import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 /** create book endpoint */
 export const deleteBookResources = ({
   scope,
+  project,
   stage,
   commonLambdaProps,
   commonDataSourceProps,
@@ -16,6 +17,7 @@ export const deleteBookResources = ({
   deployResolvers,
 }: {
   scope: Construct;
+  project: string;
   stage: Stage;
   commonLambdaProps: CommonLambdaProps;
   commonDataSourceProps: CommonDataSourceProps;
@@ -25,7 +27,7 @@ export const deleteBookResources = ({
 }) => {
   const deleteBookLambda = new lambda.Function(
     scope,
-    `DeleteBookHandler_${stage}`,
+    `DeleteBookHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
       handler: 'deleteBook.handler',
@@ -36,10 +38,10 @@ export const deleteBookResources = ({
 
   const deleteBookDataSource = new appsync.CfnDataSource(
     scope,
-    `DeleteBookDataSource_${stage}`,
+    `DeleteBookDataSource_${project}_${stage}`,
     {
       ...commonDataSourceProps,
-      name: `DeleteBookDataSource_${stage}`,
+      name: `DeleteBookDataSource_${project}_${stage}`,
       lambdaConfig: {
         lambdaFunctionArn: deleteBookLambda.functionArn,
       },
@@ -49,7 +51,7 @@ export const deleteBookResources = ({
   if (deployResolvers) {
     const deleteBookResolver = new appsync.CfnResolver(
       scope,
-      `DeleteBookResolver${stage}`,
+      `DeleteBookResolver_${project}_${stage}`,
       {
         apiId: api.attrApiId,
         typeName: 'Mutation',

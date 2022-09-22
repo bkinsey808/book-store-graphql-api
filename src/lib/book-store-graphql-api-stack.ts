@@ -22,15 +22,23 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
 
     // applies a new tag to the given construct and all of its children.
     cdk.Tags.of(this).add('stage', context.stage);
+    cdk.Tags.of(this).add('project', context.project);
 
-    const { stage, commonLambdaProps, commonDataSourceProps, booksTable, api } =
-      commonResources({
-        scope: this,
-        context,
-      });
+    const {
+      stage,
+      project,
+      commonLambdaProps,
+      commonDataSourceProps,
+      booksTable,
+      api,
+    } = commonResources({
+      scope: this,
+      context,
+    });
 
     listBooksResources({
       scope: this,
+      project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
@@ -41,6 +49,7 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
 
     getBookByIdResources({
       scope: this,
+      project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
@@ -51,6 +60,7 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
 
     createBookResources({
       scope: this,
+      project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
@@ -61,6 +71,7 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
 
     updateBookResources({
       scope: this,
+      project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
@@ -71,6 +82,7 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
 
     deleteBookResources({
       scope: this,
+      project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,

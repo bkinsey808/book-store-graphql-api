@@ -8,6 +8,7 @@ export enum Stage {
 
 export interface BookStoreGraphqlApiStackContext {
   stage: Stage;
+  project: string;
   deployResolvers: boolean;
 }
 
