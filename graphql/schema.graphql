@@ -1,35 +1,51 @@
-type Book {
+scalar AWSJSON
+
+type Session {
   id: ID!
   title: String!
   completed: Boolean
   rating: Int
   reviews: [String]
+  data: AWSJSON
+}
+
+type AuthData {
+  authType: String!
+  data: AWSJSON!
 }
 
 type Success {
   success: Boolean!
+  data: AWSJSON
 }
 
 type Query {
-  listBooks: [Book]
-  getBookById(bookId: ID!): Book
+  listSessions: [Session]
+  getSessionById(sessionId: ID!): Session
 }
 
 type Mutation {
-  createBook(book: BookInput!): Book
-  updateBook(book: UpdateBookInput!): Book
-  deleteBook(bookId: ID!): Success
+  createSession(session: SessionInput!): Session
+  updateSession(session: UpdateSessionInput!): Session
+  deleteSession(sessionId: ID!): Success
+  auth(authInput: AuthInput!): Success
 }
 
-input BookInput {
+input SessionInput {
   id: ID!
   title: String!
 }
 
-input UpdateBookInput {
+input UpdateSessionInput {
   id: ID!
   title: String
   completed: Boolean
   rating: Int
   reviews: [String]
+  data: AWSJSON
+}
+
+input AuthInput {
+  authType: String!
+  data: AWSJSON!
 }

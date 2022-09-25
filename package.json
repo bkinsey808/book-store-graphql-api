@@ -1,8 +1,8 @@
 {
-  "name": "book-store-graphql-api",
+  "name": "bkinsey808com-api",
   "version": "0.1.0",
   "bin": {
-    "book-store-graphql-api": "dist/bin/book-store-graphql-api.js"
+    "bkinsey808com-graphql-api": "dist/bin/bkinsey808com-graphql-api.js"
   },
   "scripts": {
     "build": "tsc",
@@ -14,7 +14,7 @@
     "deploy": "cross-env DEPLOY_RESOLVERS=false cdk deploy && cross-env DEPLOY_RESOLVERS=true cdk deploy --outputs-file cdk.outputs.json",
     "codegen": "graphql-codegen",
     "//cdk-app": "echo 'This is the script cdk calls, configured in cdk.json'",
-    "cdk-app": "dotenv -c -- ts-node --prefer-ts-exts src/bin/book-store-graphql-api.ts"
+    "cdk-app": "dotenv -c -- ts-node --prefer-ts-exts src/bin/bkinsey808com-graphql-api.ts"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.12.0",

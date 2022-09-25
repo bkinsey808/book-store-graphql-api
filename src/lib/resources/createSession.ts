@@ -5,14 +5,14 @@ import { Construct } from 'constructs';
 
 import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 
-/** create book endpoint */
-export const deleteBookResources = ({
+/** create session endpoint */
+export const createSessionResources = ({
   scope,
   project,
   stage,
   commonLambdaProps,
   commonDataSourceProps,
-  booksTable,
+  sessionTable,
   api,
   deployResolvers,
 }: {
@@ -21,42 +21,42 @@ export const deleteBookResources = ({
   stage: Stage;
   commonLambdaProps: CommonLambdaProps;
   commonDataSourceProps: CommonDataSourceProps;
-  booksTable: dynamodb.Table;
+  sessionTable: dynamodb.Table;
   api: appsync.CfnGraphQLApi;
   deployResolvers: boolean;
 }) => {
-  const deleteBookLambda = new lambda.Function(
+  const createSessionLambda = new lambda.Function(
     scope,
-    `DeleteBookHandler_${project}_${stage}`,
+    `CreateSessionHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
-      handler: 'deleteBook.handler',
+      handler: 'createSession.handler',
     },
   );
 
-  booksTable.grantReadWriteData(deleteBookLambda);
+  sessionTable.grantReadWriteData(createSessionLambda);
 
-  const deleteBookDataSource = new appsync.CfnDataSource(
+  const createSessionDataSource = new appsync.CfnDataSource(
     scope,
-    `DeleteBookDataSource_${project}_${stage}`,
+    `CreateSessionDataSource_${project}_${stage}`,
     {
       ...commonDataSourceProps,
-      name: `DeleteBookDataSource_${project}_${stage}`,
+      name: `CreateSessionDataSource_${project}_${stage}`,
       lambdaConfig: {
-        lambdaFunctionArn: deleteBookLambda.functionArn,
+        lambdaFunctionArn: createSessionLambda.functionArn,
       },
     },
   );
 
   if (deployResolvers) {
-    const deleteBookResolver = new appsync.CfnResolver(
+    const createSessionResolver = new appsync.CfnResolver(
       scope,
-      `DeleteBookResolver_${project}_${stage}`,
+      `CreateSessionResolver_${project}_${stage}`,
       {
         apiId: api.attrApiId,
         typeName: 'Mutation',
-        fieldName: 'deleteBook',
-        dataSourceName: deleteBookDataSource.name,
+        fieldName: 'createSession',
+        dataSourceName: createSessionDataSource.name,
       },
     );
   }

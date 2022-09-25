@@ -5,14 +5,14 @@ import { Construct } from 'constructs';
 
 import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 
-/** list books endpoint */
-export const listBooksResources = ({
+/** create session endpoint */
+export const authResources = ({
   scope,
   project,
   stage,
   commonLambdaProps,
   commonDataSourceProps,
-  booksTable,
+  sessionTable,
   api,
   deployResolvers,
 }: {
@@ -21,42 +21,42 @@ export const listBooksResources = ({
   stage: Stage;
   commonLambdaProps: CommonLambdaProps;
   commonDataSourceProps: CommonDataSourceProps;
-  booksTable: dynamodb.Table;
+  sessionTable: dynamodb.Table;
   api: appsync.CfnGraphQLApi;
   deployResolvers: boolean;
 }) => {
-  const listBooksLambda = new lambda.Function(
+  const authLambda = new lambda.Function(
     scope,
-    `ListBooksHandler_${project}_${stage}`,
+    `AuthHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
-      handler: 'listBooks.handler',
+      handler: 'auth.handler',
     },
   );
 
-  booksTable.grantReadData(listBooksLambda);
+  sessionTable.grantReadWriteData(authLambda);
 
-  const listBooksDataSource = new appsync.CfnDataSource(
+  const authDataSource = new appsync.CfnDataSource(
     scope,
-    `ListBooksDataSource_${project}_${stage}`,
+    `AuthDataSource_${project}_${stage}`,
     {
       ...commonDataSourceProps,
-      name: `ListBooksDataSource_${project}_${stage}`,
+      name: `AuthDataSource_${project}_${stage}`,
       lambdaConfig: {
-        lambdaFunctionArn: listBooksLambda.functionArn,
+        lambdaFunctionArn: authLambda.functionArn,
       },
     },
   );
 
   if (deployResolvers) {
-    const listBooksResolver = new appsync.CfnResolver(
+    const authResolver = new appsync.CfnResolver(
       scope,
-      `ListBooksResolver_${project}_${stage}`,
+      `AuthResolver_${project}_${stage}`,
       {
         apiId: api.attrApiId,
-        typeName: 'Query',
-        fieldName: 'listBooks',
-        dataSourceName: listBooksDataSource.name,
+        typeName: 'Mutation',
+        fieldName: 'auth',
+        dataSourceName: authDataSource.name,
       },
     );
   }

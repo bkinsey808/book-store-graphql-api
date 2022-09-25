@@ -5,14 +5,14 @@ import { Construct } from 'constructs';
 
 import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 
-/** create book endpoint */
-export const createBookResources = ({
+/** get session by id endpoint */
+export const getSessionByIdResources = ({
   scope,
   project,
   stage,
   commonLambdaProps,
   commonDataSourceProps,
-  booksTable,
+  sessionTable,
   api,
   deployResolvers,
 }: {
@@ -21,42 +21,42 @@ export const createBookResources = ({
   stage: Stage;
   commonLambdaProps: CommonLambdaProps;
   commonDataSourceProps: CommonDataSourceProps;
-  booksTable: dynamodb.Table;
+  sessionTable: dynamodb.Table;
   api: appsync.CfnGraphQLApi;
   deployResolvers: boolean;
 }) => {
-  const createBookLambda = new lambda.Function(
+  const getSessionByIdLambda = new lambda.Function(
     scope,
-    `CreateBookHandler_${project}_${stage}`,
+    `GetSessionByIdHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
-      handler: 'createBook.handler',
+      handler: 'getSessionById.handler',
     },
   );
 
-  booksTable.grantReadWriteData(createBookLambda);
+  sessionTable.grantReadData(getSessionByIdLambda);
 
-  const createBookDataSource = new appsync.CfnDataSource(
+  const getSessionByIdDataSource = new appsync.CfnDataSource(
     scope,
-    `CreateBookDataSource_${project}_${stage}`,
+    `GetSessionByIdDataSource_${project}_${stage}`,
     {
       ...commonDataSourceProps,
-      name: `CreateBookDataSource_${project}_${stage}`,
+      name: `GetSessionByIdDataSource_${project}_${stage}`,
       lambdaConfig: {
-        lambdaFunctionArn: createBookLambda.functionArn,
+        lambdaFunctionArn: getSessionByIdLambda.functionArn,
       },
     },
   );
 
   if (deployResolvers) {
-    const createBookResolver = new appsync.CfnResolver(
+    const getSessionByIdResolver = new appsync.CfnResolver(
       scope,
-      `CreateBookResolver_${project}_${stage}`,
+      `GetSessionByIdResolver_${project}_${stage}`,
       {
         apiId: api.attrApiId,
-        typeName: 'Mutation',
-        fieldName: 'createBook',
-        dataSourceName: createBookDataSource.name,
+        typeName: 'Query',
+        fieldName: 'getSessionById',
+        dataSourceName: getSessionByIdDataSource.name,
       },
     );
   }

@@ -5,14 +5,14 @@ import { Construct } from 'constructs';
 
 import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 
-/** get book by id endpoint */
-export const getBookByIdResources = ({
+/** list sessions endpoint */
+export const listSessionsResources = ({
   scope,
   project,
   stage,
   commonLambdaProps,
   commonDataSourceProps,
-  booksTable,
+  sessionTable,
   api,
   deployResolvers,
 }: {
@@ -21,42 +21,42 @@ export const getBookByIdResources = ({
   stage: Stage;
   commonLambdaProps: CommonLambdaProps;
   commonDataSourceProps: CommonDataSourceProps;
-  booksTable: dynamodb.Table;
+  sessionTable: dynamodb.Table;
   api: appsync.CfnGraphQLApi;
   deployResolvers: boolean;
 }) => {
-  const getBookByIdLambda = new lambda.Function(
+  const listSessionsLambda = new lambda.Function(
     scope,
-    `GetBookByIdHandler_${project}_${stage}`,
+    `ListSessionsHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
-      handler: 'getBookById.handler',
+      handler: 'listSessions.handler',
     },
   );
 
-  booksTable.grantReadData(getBookByIdLambda);
+  sessionTable.grantReadData(listSessionsLambda);
 
-  const getBookByIdDataSource = new appsync.CfnDataSource(
+  const listSessionsDataSource = new appsync.CfnDataSource(
     scope,
-    `GetBookByIdDataSource_${project}_${stage}`,
+    `ListSessionsDataSource_${project}_${stage}`,
     {
       ...commonDataSourceProps,
-      name: `GetBookByIdDataSource_${project}_${stage}`,
+      name: `ListSessionsDataSource_${project}_${stage}`,
       lambdaConfig: {
-        lambdaFunctionArn: getBookByIdLambda.functionArn,
+        lambdaFunctionArn: listSessionsLambda.functionArn,
       },
     },
   );
 
   if (deployResolvers) {
-    const getBookByIdResolver = new appsync.CfnResolver(
+    const listSessionsResolver = new appsync.CfnResolver(
       scope,
-      `GetBookByIdResolver_${project}_${stage}`,
+      `ListSessionsResolver_${project}_${stage}`,
       {
         apiId: api.attrApiId,
         typeName: 'Query',
-        fieldName: 'getBookById',
-        dataSourceName: getBookByIdDataSource.name,
+        fieldName: 'listSessions',
+        dataSourceName: listSessionsDataSource.name,
       },
     );
   }

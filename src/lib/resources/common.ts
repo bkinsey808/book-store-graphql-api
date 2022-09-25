@@ -7,7 +7,7 @@ import { Construct } from 'constructs';
 import { readFileSync } from 'fs';
 
 import {
-  BookStoreGraphqlApiStackContext,
+  SessionStoreGraphqlApiStackContext,
   CommonDataSourceProps,
   CommonLambdaProps,
 } from '../helpers';
@@ -18,13 +18,13 @@ export const commonResources = ({
   context,
 }: {
   scope: Construct;
-  context: BookStoreGraphqlApiStackContext;
+  context: SessionStoreGraphqlApiStackContext;
 }) => {
   const stage = context.stage;
   const project = context.project;
 
   const api = new appsync.CfnGraphQLApi(scope, `${project}_${stage}`, {
-    name: `book-api-${stage}`,
+    name: `session-api-${stage}`,
     authenticationType: 'API_KEY',
   });
 
@@ -95,9 +95,9 @@ export const commonResources = ({
     iam.ManagedPolicy.fromAwsManagedPolicyName('AWSLambda_FullAccess'),
   );
 
-  const booksTable = new dynamodb.Table(
+  const sessionTable = new dynamodb.Table(
     scope,
-    `BooksTable_${project}_${stage}`,
+    `SessionsTable_${project}_${stage}`,
     {
       partitionKey: {
         name: 'id',
@@ -114,7 +114,7 @@ export const commonResources = ({
     // architecture: lambda.Architecture.ARM_64,
     code: lambda.Code.fromAsset('dist/functions'),
     environment: {
-      BOOKS_TABLE: booksTable.tableName,
+      SESSION_TABLE: sessionTable.tableName,
       STAGE: stage,
     },
   };
@@ -130,7 +130,7 @@ export const commonResources = ({
     stage,
     commonLambdaProps,
     commonDataSourceProps,
-    booksTable,
+    sessionTable,
     api,
   };
 };

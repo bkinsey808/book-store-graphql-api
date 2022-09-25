@@ -6,14 +6,14 @@ import * as path from 'path';
 
 import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 
-/** create book endpoint */
-export const updateBookResources = ({
+/** create session endpoint */
+export const updateSessionResources = ({
   scope,
   project,
   stage,
   commonLambdaProps,
   commonDataSourceProps,
-  booksTable,
+  sessionTable,
   api,
   deployResolvers,
 }: {
@@ -22,43 +22,43 @@ export const updateBookResources = ({
   stage: Stage;
   commonLambdaProps: CommonLambdaProps;
   commonDataSourceProps: CommonDataSourceProps;
-  booksTable: dynamodb.Table;
+  sessionTable: dynamodb.Table;
   api: appsync.CfnGraphQLApi;
   deployResolvers: boolean;
 }) => {
-  const updateBookLambda = new nodejsLambda.NodejsFunction(
+  const updateSessionLambda = new nodejsLambda.NodejsFunction(
     scope,
-    `UpdateBookHandler_${project}_${stage}`,
+    `UpdateSessionHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
       handler: 'handler',
-      entry: path.join(__dirname, '../../functions/updateBook.ts'),
+      entry: path.join(__dirname, '../../functions/updateSession.ts'),
     },
   );
 
-  booksTable.grantReadWriteData(updateBookLambda);
+  sessionTable.grantReadWriteData(updateSessionLambda);
 
-  const updateBookDataSource = new appsync.CfnDataSource(
+  const updateSessionDataSource = new appsync.CfnDataSource(
     scope,
-    `UpdateBookDataSource_${project}_${stage}`,
+    `UpdateSessionDataSource_${project}_${stage}`,
     {
       ...commonDataSourceProps,
-      name: `UpdateBookDataSource_${project}_${stage}`,
+      name: `UpdateSessionDataSource_${project}_${stage}`,
       lambdaConfig: {
-        lambdaFunctionArn: updateBookLambda.functionArn,
+        lambdaFunctionArn: updateSessionLambda.functionArn,
       },
     },
   );
 
   if (deployResolvers) {
-    const updateBookResolver = new appsync.CfnResolver(
+    const updateSessionResolver = new appsync.CfnResolver(
       scope,
-      `UpdateBookResolver_${project}_${stage}`,
+      `UpdateSessionResolver_${project}_${stage}`,
       {
         apiId: api.attrApiId,
         typeName: 'Mutation',
-        fieldName: 'updateBook',
-        dataSourceName: updateBookDataSource.name,
+        fieldName: 'updateSession',
+        dataSourceName: updateSessionDataSource.name,
       },
     );
   }

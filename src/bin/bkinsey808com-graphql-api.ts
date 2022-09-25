@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { BookStoreGraphqlApiStack } from '../lib/book-store-graphql-api-stack';
+import { SessionStoreGraphqlApiStack } from '../lib/bkinsey808com-graphql-api-stack';
 import { Stage } from '../lib/helpers';
 
 console.log('PROJECT:', process.env.PROJECT);
@@ -41,7 +41,7 @@ try {
     project,
   };
 
-  new BookStoreGraphqlApiStack(app, `${project}-${stage}`, stackProps, {
+  new SessionStoreGraphqlApiStack(app, `${project}-${stage}`, stackProps, {
     ...context,
     deployResolvers: process.env.DEPLOY_RESOLVERS === 'true',
   });

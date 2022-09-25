@@ -1,29 +1,29 @@
 import { AppSyncResolverHandler } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
 
-import { Book, QueryGetBookByIdArgs } from '../../types/books';
+import { Session, QueryGetSessionByIdArgs } from '../../types/api';
 
 const documentClient = new DynamoDB.DocumentClient();
 
 export const handler: AppSyncResolverHandler<
-  QueryGetBookByIdArgs,
-  Book | null
+  QueryGetSessionByIdArgs,
+  Session | null
 > = async (event) => {
   try {
-    if (!process.env.BOOKS_TABLE) {
-      throw new Error('BOOKS_TABLE environment variable not set');
+    if (!process.env.SESSION_TABLE) {
+      throw new Error('SESSION_TABLE environment variable not set');
     }
 
-    const bookId = event.arguments.bookId;
+    const sessionId = event.arguments.sessionId;
 
     const { Item } = await documentClient
       .get({
-        TableName: process.env.BOOKS_TABLE,
-        Key: { id: bookId },
+        TableName: process.env.SESSION_TABLE,
+        Key: { id: sessionId },
       })
       .promise();
 
-    return Item as Book;
+    return Item as Session;
   } catch (err) {
     console.log('DynamoDB error: ', err);
     return null;

@@ -6,7 +6,7 @@ export enum Stage {
   PROD = 'production',
 }
 
-export interface BookStoreGraphqlApiStackContext {
+export interface SessionStoreGraphqlApiStackContext {
   stage: Stage;
   project: string;
   deployResolvers: boolean;

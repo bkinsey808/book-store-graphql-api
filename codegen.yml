@@ -3,6 +3,9 @@ schema:
   - graphql/schema.graphql
 
 generates:
-  types/books.d.ts:
+  types/api.d.ts:
     plugins:
       - typescript
+    config:
+      scalars:
+        AWSJSON: string

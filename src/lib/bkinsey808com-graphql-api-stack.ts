@@ -1,20 +1,21 @@
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
 
-import { BookStoreGraphqlApiStackContext } from './helpers';
+import { SessionStoreGraphqlApiStackContext } from './helpers';
 import { commonResources } from './resources/common';
-import { listBooksResources } from './resources/listBooks';
-import { getBookByIdResources } from './resources/getBookById';
-import { createBookResources } from './resources/createBook';
-import { updateBookResources } from './resources/updateBook';
-import { deleteBookResources } from './resources/deleteBook';
+import { listSessionsResources } from './resources/listSessions';
+import { getSessionByIdResources } from './resources/getSessionById';
+import { createSessionResources } from './resources/createSession';
+import { updateSessionResources } from './resources/updateSession';
+import { deleteSessionResources } from './resources/deleteSession';
+import { authResources } from './resources/auth';
 
-export class BookStoreGraphqlApiStack extends cdk.Stack {
+export class SessionStoreGraphqlApiStack extends cdk.Stack {
   constructor(
     scope: Construct,
     id: string,
     props: cdk.StackProps,
-    context: BookStoreGraphqlApiStackContext,
+    context: SessionStoreGraphqlApiStackContext,
   ) {
     super(scope, id, props);
 
@@ -29,64 +30,75 @@ export class BookStoreGraphqlApiStack extends cdk.Stack {
       project,
       commonLambdaProps,
       commonDataSourceProps,
-      booksTable,
+      sessionTable,
       api,
     } = commonResources({
       scope: this,
       context,
     });
 
-    listBooksResources({
+    listSessionsResources({
       scope: this,
       project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
-      booksTable,
+      sessionTable,
       api,
       deployResolvers,
     });
 
-    getBookByIdResources({
+    getSessionByIdResources({
       scope: this,
       project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
-      booksTable,
+      sessionTable,
       api,
       deployResolvers,
     });
 
-    createBookResources({
+    authResources({
       scope: this,
       project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
-      booksTable,
+      sessionTable,
       api,
       deployResolvers,
     });
 
-    updateBookResources({
+    createSessionResources({
       scope: this,
       project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
-      booksTable,
+      sessionTable,
       api,
       deployResolvers,
     });
 
-    deleteBookResources({
+    updateSessionResources({
       scope: this,
       project,
       stage,
       commonLambdaProps,
       commonDataSourceProps,
-      booksTable,
+      sessionTable,
+      api,
+      deployResolvers,
+    });
+
+    deleteSessionResources({
+      scope: this,
+      project,
+      stage,
+      commonLambdaProps,
+      commonDataSourceProps,
+      sessionTable,
       api,
       deployResolvers,
     });
