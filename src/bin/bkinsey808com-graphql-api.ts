@@ -4,16 +4,20 @@ import * as cdk from 'aws-cdk-lib';
 import { SessionStoreGraphqlApiStack } from '../lib/bkinsey808com-graphql-api-stack';
 import { Stage } from '../lib/helpers';
 
+const account = process.env.ACCOUNT ?? process.env.CDK_DEFAULT_ACCOUNT;
+const region = process.env.REGION ?? process.env.CDK_DEFAULT_REGION;
+
 console.log('PROJECT:', process.env.PROJECT);
 console.log('STAGE:', process.env.STAGE);
 console.log('DEPLOY_RESOLVERS:', process.env.DEPLOY_RESOLVERS);
+console.log('REGION:', process.env.CDK_DEFAULT_REGION);
 
 const app = new cdk.App();
 
 const stackProps: cdk.StackProps = {
   env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION,
+    account,
+    region,
   },
 };
 

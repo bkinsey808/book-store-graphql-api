@@ -38,6 +38,7 @@
     "aws-cdk-lib": "2.41.0",
     "aws-sdk": "^2.1214.0",
     "constructs": "^10.0.0",
+    "google-auth-library": "^8.5.2",
     "source-map-support": "^0.5.21"
   }
 }

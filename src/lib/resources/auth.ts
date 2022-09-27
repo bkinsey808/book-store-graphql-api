@@ -1,7 +1,8 @@
 import * as appsync from 'aws-cdk-lib/aws-appsync';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as nodejsLambda from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
+import * as path from 'path';
 
 import { CommonDataSourceProps, CommonLambdaProps, Stage } from '../helpers';
 
@@ -25,12 +26,13 @@ export const authResources = ({
   api: appsync.CfnGraphQLApi;
   deployResolvers: boolean;
 }) => {
-  const authLambda = new lambda.Function(
+  const authLambda = new nodejsLambda.NodejsFunction(
     scope,
     `AuthHandler_${project}_${stage}`,
     {
       ...commonLambdaProps,
-      handler: 'auth.handler',
+      handler: 'handler',
+      entry: path.join(__dirname, '../../functions/auth.ts'),
     },
   );
 

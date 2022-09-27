@@ -9,6 +9,7 @@
         "codegen",
         "dynoexpr",
         "esbuild",
+        "outdir",
         "tuplo"
     ],
     "ignoreWords": [],
